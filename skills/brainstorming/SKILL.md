@@ -28,7 +28,7 @@ You MUST create a task for each of these items and complete them in order:
 3. **Decision Interrogation** — explicitly probe architecture tradeoffs before selecting approach
 4. **Propose 2-3 approaches** — with trade-offs and your recommendation
 5. **Present design** — in sections scaled to their complexity, get user approval after each section
-6. **Write design doc** — save to `docs/plans/YYYY-MM-DD-<topic>-design.md` and commit
+6. **Write design doc** — save to `docs/plans/YYYY-MM-DD-<topic>-design.md`, do NOT commit
 7. **Transition to implementation** — invoke writing-plans skill to create implementation plan
 
 ## Process Flow
