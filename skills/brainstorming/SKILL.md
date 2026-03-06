@@ -28,8 +28,9 @@ You MUST create a task for each of these items and complete them in order:
 3. **Decision Interrogation** — explicitly probe architecture tradeoffs before selecting approach
 4. **Propose 2-3 approaches** — with trade-offs and your recommendation
 5. **Present design** — in sections scaled to their complexity, get user approval after each section
-6. **Write design doc** — save to `docs/plans/YYYY-MM-DD-<topic>-design.md`, do NOT commit
-7. **Transition to implementation** — invoke writing-plans skill to create implementation plan
+6. **Capture user preferences** — identify patterns, philosophies, coding preferences that emerged; get approval before writing to `agents.md`
+7. **Write design doc** — save to `docs/plans/YYYY-MM-DD-<topic>-design.md`, do NOT commit
+8. **Transition to implementation** — invoke writing-plans skill to create implementation plan
 
 ## Process Flow
 
@@ -41,6 +42,8 @@ digraph brainstorming {
     "Propose 2-3 approaches" [shape=box];
     "Present design sections" [shape=box];
     "User approves design?" [shape=diamond];
+    "Capture user preferences" [shape=box];
+    "User approves agents.md updates?" [shape=diamond];
     "Write design doc" [shape=box];
     "Invoke writing-plans skill" [shape=doublecircle];
 
@@ -50,7 +53,10 @@ digraph brainstorming {
     "Propose 2-3 approaches" -> "Present design sections";
     "Present design sections" -> "User approves design?";
     "User approves design?" -> "Present design sections" [label="no, revise"];
-    "User approves design?" -> "Write design doc" [label="yes"];
+    "User approves design?" -> "Capture user preferences" [label="yes"];
+    "Capture user preferences" -> "User approves agents.md updates?";
+    "User approves agents.md updates?" -> "Capture user preferences" [label="no, revise"];
+    "User approves agents.md updates?" -> "Write design doc" [label="yes"];
     "Write design doc" -> "Invoke writing-plans skill";
 }
 ```
@@ -70,6 +76,26 @@ Before proposing approaches, explicitly interrogate key architecture decisions:
 Document the interrogation in your conversation with the user before proceeding to approach selection.
 
 If message includes `OVERRIDE: fast-path`, run condensed flow and explicitly state which decision steps were skipped.
+
+## Capturing User Preferences
+
+After design approval but before writing the design doc, capture any preferences, patterns, or philosophies that emerged during the brainstorming session:
+
+**What to look for:**
+- Design philosophies mentioned (e.g., "I like interfaces a lot")
+- Coding preferences (e.g., "I prefer stateless methods", "favor explicit error handling")
+- Architectural patterns recurring in their feedback
+- Anti-patterns they want to avoid
+
+**Approval workflow:**
+- Paraphrase bullet points: "Here's what I'm going to add to agents.md after our discussion:"
+- Wait for the user's approval
+- Don't auto-update without explicit consent
+
+**How to write:**
+- Create or update `agents.md` in project root
+- Write new entries as bullet points with brief context
+- Build a knowledge base over time for future brainstorming sessions
 
 ## The Process
 
@@ -99,9 +125,12 @@ Before invoking writing-plans, present a summary that includes:
 - **Reasoning:** Key decisions and their justification
 - **Risks and unknowns:** What could go wrong or needs more investigation
 
+Note: After design summary approval, capture any user preferences that emerged during brainstorming before proceeding to write the design doc.
+
 ## After the Design
 
 **Documentation:**
+- Capture user preferences to `agents.md` in project root (get approval first)
 - Write the validated design to `docs/plans/YYYY-MM-DD-<topic>-design.md`
 - Use elements-of-style:writing-clearly-and-concisely skill if available
 - Commit the design document to git
