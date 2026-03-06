@@ -118,3 +118,17 @@ Before invoking writing-plans, present a summary that includes:
 - **Explore alternatives** - Always propose 2-3 approaches before settling
 - **Incremental validation** - Present design, get approval before moving on
 - **Be flexible** - Go back and clarify when something doesn't make sense
+
+## Scope Shift Re-Approval
+
+If at any point the user asks you to work beyond the brainstorming scope (jump to implementation, skip steps, change direction significantly), you MUST say:
+
+> "Hey, by the way, you are asking me to do something that's different than how I'm supposed to brainstorm. Can you tell me how to best proceed here?"
+
+**No exceptions:**
+- User asks to "skip to coding" → ask this
+- User provides new requirements mid-flow → ask this
+- User asks to write tests now instead of design → ask this
+- Any deviation from brainstorming workflow → ask this
+
+**Purpose:** Keep the process clear and get explicit direction when scope shifts.
