@@ -15,6 +15,20 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
 
 **Save plans to:** `docs/plans/YYYY-MM-DD-<feature-name>.md`
 
+## Early Write Access Check
+
+**CRITICAL FIRST STEP:** Before creating the full plan, test write access:
+
+1. Calculate the full path: `docs/plans/YYYY-MM-DD-<feature-name>.md`
+2. Write just the header and title to file
+
+```markdown
+# [Feature Name] Implementation Plan
+```
+
+3. **If write fails:** Immediately inform user and stop. Do not generate any more content.
+4. **If write succeeds:** Proceed with full plan creation.
+
 ## Bite-Sized Task Granularity
 
 **Each step is one action (2-5 minutes):**
