@@ -25,10 +25,11 @@ You MUST create a task for each of these items and complete them in order:
 
 1. **Explore project context** — check files, docs, recent commits
 2. **Ask clarifying questions** — one at a time, understand purpose/constraints/success criteria
-3. **Propose 2-3 approaches** — with trade-offs and your recommendation
-4. **Present design** — in sections scaled to their complexity, get user approval after each section
-5. **Write design doc** — save to `docs/plans/YYYY-MM-DD-<topic>-design.md` and commit
-6. **Transition to implementation** — invoke writing-plans skill to create implementation plan
+3. **Decision Interrogation** — explicitly probe architecture tradeoffs before selecting approach
+4. **Propose 2-3 approaches** — with trade-offs and your recommendation
+5. **Present design** — in sections scaled to their complexity, get user approval after each section
+6. **Write design doc** — save to `docs/plans/YYYY-MM-DD-<topic>-design.md` and commit
+7. **Transition to implementation** — invoke writing-plans skill to create implementation plan
 
 ## Process Flow
 
@@ -36,6 +37,7 @@ You MUST create a task for each of these items and complete them in order:
 digraph brainstorming {
     "Explore project context" [shape=box];
     "Ask clarifying questions" [shape=box];
+    "Decision Interrogation" [shape=box];
     "Propose 2-3 approaches" [shape=box];
     "Present design sections" [shape=box];
     "User approves design?" [shape=diamond];
@@ -43,7 +45,8 @@ digraph brainstorming {
     "Invoke writing-plans skill" [shape=doublecircle];
 
     "Explore project context" -> "Ask clarifying questions";
-    "Ask clarifying questions" -> "Propose 2-3 approaches";
+    "Ask clarifying questions" -> "Decision Interrogation";
+    "Decision Interrogation" -> "Propose 2-3 approaches";
     "Propose 2-3 approaches" -> "Present design sections";
     "Present design sections" -> "User approves design?";
     "User approves design?" -> "Present design sections" [label="no, revise"];
@@ -53,6 +56,20 @@ digraph brainstorming {
 ```
 
 **The terminal state is invoking writing-plans.** Do NOT invoke frontend-design, mcp-builder, or any other implementation skill. The ONLY skill you invoke after brainstorming is writing-plans.
+
+## Decision Interrogation
+
+Before proposing approaches, explicitly interrogate key architecture decisions:
+
+- **Abstraction:** Should this be implemented now or deferred? What is the simplest viable option?
+- **Placement:** Where does this belong — service, helper, model, or ViewModel-equivalent role?
+- **Dependency approach:** Direct construction or injection?
+- **Testing implications:** How will this be tested? What are the test boundaries?
+- **Unknowns:** What is NOT yet known that could change the design?
+
+Document the interrogation in your conversation with the user before proceeding to approach selection.
+
+If message includes `OVERRIDE: fast-path`, run condensed flow and explicitly state which decision steps were skipped.
 
 ## The Process
 
@@ -74,6 +91,13 @@ digraph brainstorming {
 - Ask after each section whether it looks right so far
 - Cover: architecture, components, data flow, error handling, testing
 - Be ready to go back and clarify if something doesn't make sense
+
+**Design Summary (required before transition to planning):**
+Before invoking writing-plans, present a summary that includes:
+- **Chosen architecture:** What approach was selected and why
+- **Rejected alternatives:** What was considered and why it was rejected
+- **Reasoning:** Key decisions and their justification
+- **Risks and unknowns:** What could go wrong or needs more investigation
 
 ## After the Design
 

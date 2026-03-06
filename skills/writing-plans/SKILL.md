@@ -89,10 +89,36 @@ git commit -m "feat: add specific feature"
 
 ## Remember
 - Exact file paths always
-- Complete code in plan (not "add validation")
+- Pseudocode first, tiny snippet(s) only (signatures, short shape examples — NOT complete implementations)
 - Exact commands with expected output
 - Reference relevant skills with @ syntax
 - DRY, YAGNI, TDD, frequent commits
+
+## Decision Traceability
+
+Each phase in the plan must trace back to decisions in the approved design summary:
+- Link phase objectives to specific design decisions
+- If a step requires architecture not present in approved design summary, stop and ask; do not infer.
+- Document which approved decision each phase implements
+
+## Phase Structure
+
+Every phase MUST include:
+
+```markdown
+### Phase N: [Name]
+- **Objective:** What this phase accomplishes
+- **Approved decisions implemented:** Which design decisions this phase satisfies
+- **Pseudocode flow:** High-level logic (not complete code)
+- **Tiny snippet(s) only:** Minimal illustrative examples
+- **Validation criteria:** How to verify success
+- **Language-specific gotchas:** Common pitfalls for this implementation
+```
+
+## Guardrails
+
+- **Stop and ask:** If implementation reveals ambiguity requiring architecture change, do not proceed — ask the user
+- **No new abstractions:** Do not introduce unapproved patterns or structures during planning
 
 ## Execution Handoff
 
