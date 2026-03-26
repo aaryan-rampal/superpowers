@@ -28,7 +28,7 @@ You MUST create a task for each of these items and complete them in order:
 3. **Decision Interrogation** — explicitly probe architecture tradeoffs before selecting approach
 4. **Propose 2-3 approaches** — with trade-offs and your recommendation
 5. **Present design** — in sections scaled to their complexity, get user approval after each section
-6. **Capture user preferences** — identify patterns, philosophies, coding preferences that emerged; get approval before writing to `agents.md`
+6. **Capture user preferences** — identify patterns, philosophies, coding preferences that emerged; get approval before writing to `AGENTS.md`
 7. **Write design doc** — save to `docs/plans/YYYY-MM-DD-<topic>-design.md`, do NOT commit
 8. **Transition to implementation** — invoke writing-plans skill to create implementation plan
 
@@ -43,7 +43,7 @@ digraph brainstorming {
     "Present design sections" [shape=box];
     "User approves design?" [shape=diamond];
     "Capture user preferences" [shape=box];
-    "User approves agents.md updates?" [shape=diamond];
+    "User approves AGENTS.md updates?" [shape=diamond];
     "Write design doc" [shape=box];
     "Invoke writing-plans skill" [shape=doublecircle];
 
@@ -54,9 +54,9 @@ digraph brainstorming {
     "Present design sections" -> "User approves design?";
     "User approves design?" -> "Present design sections" [label="no, revise"];
     "User approves design?" -> "Capture user preferences" [label="yes"];
-    "Capture user preferences" -> "User approves agents.md updates?";
-    "User approves agents.md updates?" -> "Capture user preferences" [label="no, revise"];
-    "User approves agents.md updates?" -> "Write design doc" [label="yes"];
+    "Capture user preferences" -> "User approves AGENTS.md updates?";
+    "User approves AGENTS.md updates?" -> "Capture user preferences" [label="no, revise"];
+    "User approves AGENTS.md updates?" -> "Write design doc" [label="yes"];
     "Write design doc" -> "Invoke writing-plans skill";
 }
 ```
@@ -88,12 +88,12 @@ After design approval but before writing the design doc, capture any preferences
 - Anti-patterns they want to avoid
 
 **Approval workflow:**
-- Paraphrase bullet points: "Here's what I'm going to add to agents.md after our discussion:"
+- Paraphrase bullet points: "Here's what I'm going to add to AGENTS.md after our discussion:"
 - Wait for the user's approval
 - Don't auto-update without explicit consent
 
 **How to write:**
-- Create or update `agents.md` in project root
+- Create or update `AGENTS.md` in project root
 - Write new entries as bullet points with brief context
 - Build a knowledge base over time for future brainstorming sessions
 
@@ -130,7 +130,7 @@ Note: After design summary approval, capture any user preferences that emerged d
 ## After the Design
 
 **Documentation:**
-- Capture user preferences to `agents.md` in project root (get approval first)
+- Capture user preferences to `AGENTS.md` in project root (get approval first)
 - Write the validated design to `docs/plans/YYYY-MM-DD-<topic>-design.md`
 - Use elements-of-style:writing-clearly-and-concisely skill if available
 - Commit the design document to git
