@@ -19,6 +19,17 @@ Mermaid diagram syntax has strict parsing rules that cause cryptic errors when s
 
 ## Core Rules
 
+### File Format Guard (`.mmd` vs markdown)
+
+When writing files with `.mmd` extension:
+
+- The file MUST start with Mermaid syntax directly (for example: `flowchart TD`)
+- The file MUST NOT include markdown headings (for example: `# Title`)
+- The file MUST NOT include markdown code fences (for example: ```mermaid ... ```)
+
+Use markdown wrappers only in `.md` documents intended for human reading.
+Use raw Mermaid syntax only in `.mmd` files intended for Mermaid CLI rendering.
+
 ### Node Labels Must Be Quoted When Containing Special Characters
 
 **Forward slashes** in file paths:
