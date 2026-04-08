@@ -29,8 +29,6 @@ You MUST create a task for each of these items and complete them in order:
 4. **Propose 2-3 approaches** — with trade-offs and your recommendation
 5. **Present design** — in sections scaled to their complexity, get user approval after each section
 6. **Capture user preferences** — identify patterns, philosophies, coding preferences that emerged; get approval before writing to `agents.md`
-7. **Write design doc** — save to `docs/plans/YYYY-MM-DD-<topic>-design.md`, do NOT commit
-8. **Transition to implementation** — invoke writing-plans skill to create implementation plan
 
 ## Process Flow
 
@@ -45,7 +43,6 @@ digraph brainstorming {
     "Capture user preferences" [shape=box];
     "User approves agents.md updates?" [shape=diamond];
     "Write design doc" [shape=box];
-    "Invoke writing-plans skill" [shape=doublecircle];
 
     "Explore project context" -> "Ask clarifying questions";
     "Ask clarifying questions" -> "Decision Interrogation";
@@ -57,11 +54,8 @@ digraph brainstorming {
     "Capture user preferences" -> "User approves agents.md updates?";
     "User approves agents.md updates?" -> "Capture user preferences" [label="no, revise"];
     "User approves agents.md updates?" -> "Write design doc" [label="yes"];
-    "Write design doc" -> "Invoke writing-plans skill";
 }
 ```
-
-**The terminal state is invoking writing-plans.** Do NOT invoke frontend-design, mcp-builder, or any other implementation skill. The ONLY skill you invoke after brainstorming is writing-plans.
 
 ## Decision Interrogation
 
@@ -118,8 +112,8 @@ After design approval but before writing the design doc, capture any preferences
 - Cover: architecture, components, data flow, error handling, testing
 - Be ready to go back and clarify if something doesn't make sense
 
-**Design Summary (required before transition to planning):**
-Before invoking writing-plans, present a summary that includes:
+**Design Summary:**
+Before finishing, present a summary that includes:
 - **Chosen architecture:** What approach was selected and why
 - **Rejected alternatives:** What was considered and why it was rejected
 - **Reasoning:** Key decisions and their justification
@@ -131,13 +125,9 @@ Note: After design summary approval, capture any user preferences that emerged d
 
 **Documentation:**
 - Capture user preferences to `agents.md` in project root (get approval first)
-- Write the validated design to `docs/plans/YYYY-MM-DD-<topic>-design.md`
 - Use elements-of-style:writing-clearly-and-concisely skill if available
 - Commit the design document to git
 
-**Implementation:**
-- Invoke the writing-plans skill to create a detailed implementation plan
-- Do NOT invoke any other skill. writing-plans is the next step.
 
 ## Key Principles
 
