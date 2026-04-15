@@ -41,7 +41,7 @@ digraph brainstorming {
     "Present design sections" [shape=box];
     "User approves design?" [shape=diamond];
     "Capture user preferences" [shape=box];
-    "User approves agents.md updates?" [shape=diamond];
+    "User approves AGENTS.md updates?" [shape=diamond];
     "Write design doc" [shape=box];
 
     "Explore project context" -> "Ask clarifying questions";
@@ -82,12 +82,12 @@ After design approval but before writing the design doc, capture any preferences
 - Anti-patterns they want to avoid
 
 **Approval workflow:**
-- Paraphrase bullet points: "Here's what I'm going to add to agents.md after our discussion:"
+- Paraphrase bullet points: "Here's what I'm going to add to AGENTS.md after our discussion:"
 - Wait for the user's approval
 - Don't auto-update without explicit consent
 
 **How to write:**
-- Create or update `agents.md` in project root
+- Create or update `AGENTS.md` in project root
 - Write new entries as bullet points with brief context
 - Build a knowledge base over time for future brainstorming sessions
 
