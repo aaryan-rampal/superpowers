@@ -5,8 +5,6 @@ description: "You MUST use this before any creative work - creating features, bu
 
 # Brainstorming Ideas Into Designs
 
-## Overview
-
 Help turn ideas into fully formed designs and specs through natural collaborative dialogue.
 
 Start by understanding the current project context, then ask questions one at a time to refine the idea. Once you understand what you're building, present the design and get user approval.
@@ -24,36 +22,33 @@ Every project goes through this process. A todo list, a single-function utility,
 You MUST create a task for each of these items and complete them in order:
 
 1. **Explore project context** — check files, docs, recent commits
-2. **Ask clarifying questions** — one at a time, understand purpose/constraints/success criteria
-3. **Decision Interrogation** — explicitly probe architecture tradeoffs before selecting approach
-4. **Propose 2-3 approaches** — with trade-offs and your recommendation
-5. **Present design** — in sections scaled to their complexity, get user approval after each section
-6. **Capture user preferences** — identify patterns, philosophies, coding preferences that emerged; get approval before writing to `agents.md`
+2. **Offer visual companion** (if topic will involve visual questions) — this is its own message, not combined with a clarifying question. See the Visual Companion section below.
+4. **Ask clarifying questions** — one at a time, understand purpose/constraints/success criteria
+5. **Decision Interrogation** — explicitly probe architecture tradeoffs before selecting approach
+6. **Propose 2-3 approaches** — with trade-offs and your recommendation
+7. **Present design** — in sections scaled to their complexity, get user approval after each section
+8. **Write design doc** — save to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and commit
+9. **Spec self-review** — quick inline check for placeholders, contradictions, ambiguity, scope (see below)
+10. **User reviews written spec** — ask user to review the spec file before proceeding
+11. **Capture user preferences** — identify patterns, philosophies, coding preferences that emerged; get approval before writing to `agents.md`
 
 ## Process Flow
 
 ```dot
 digraph brainstorming {
     "Explore project context" [shape=box];
+    "Visual questions ahead?" [shape=diamond];
+    "Offer Visual Companion\n(own message, no other content)" [shape=box];
     "Ask clarifying questions" [shape=box];
     "Decision Interrogation" [shape=box];
     "Propose 2-3 approaches" [shape=box];
+    "User approves approach?" [shape=diamond];
     "Present design sections" [shape=box];
     "User approves design?" [shape=diamond];
+    "Write design doc" [shape=box];
     "Capture user preferences" [shape=box];
     "User approves AGENTS.md updates?" [shape=diamond];
-    "Write design doc" [shape=box];
 
-    "Explore project context" -> "Ask clarifying questions";
-    "Ask clarifying questions" -> "Decision Interrogation";
-    "Decision Interrogation" -> "Propose 2-3 approaches";
-    "Propose 2-3 approaches" -> "Present design sections";
-    "Present design sections" -> "User approves design?";
-    "User approves design?" -> "Present design sections" [label="no, revise"];
-    "User approves design?" -> "Capture user preferences" [label="yes"];
-    "Capture user preferences" -> "User approves agents.md updates?";
-    "User approves agents.md updates?" -> "Capture user preferences" [label="no, revise"];
-    "User approves agents.md updates?" -> "Write design doc" [label="yes"];
 }
 ```
 
@@ -94,39 +89,51 @@ After design approval but before writing the design doc, capture any preferences
 ## The Process
 
 **Understanding the idea:**
+
 - Check out the current project state first (files, docs, recent commits)
-- Ask questions one at a time to refine the idea
+- Before asking detailed questions, assess scope: if the request describes multiple independent subsystems (e.g., "build a platform with chat, file storage, billing, and analytics"), flag this immediately. Don't spend questions refining details of a project that needs to be decomposed first.
+- If the project is too large for a single spec, help the user decompose into sub-projects: what are the independent pieces, how do they relate, what order should they be built? Then brainstorm the first sub-project through the normal design flow. Each sub-project gets its own spec → plan → implementation cycle.
+- For appropriately-scoped projects, ask questions one at a time to refine the idea
 - Prefer multiple choice questions when possible, but open-ended is fine too
 - Only one question per message - if a topic needs more exploration, break it into multiple questions
 - Focus on understanding: purpose, constraints, success criteria
 
 **Exploring approaches:**
+
 - Propose 2-3 different approaches with trade-offs
 - Present options conversationally with your recommendation and reasoning
 - Lead with your recommended option and explain why
 
 **Presenting the design:**
+
 - Once you believe you understand what you're building, present the design
 - Scale each section to its complexity: a few sentences if straightforward, up to 200-300 words if nuanced
 - Ask after each section whether it looks right so far
 - Cover: architecture, components, data flow, error handling, testing
 - Be ready to go back and clarify if something doesn't make sense
 
-**Design Summary:**
-Before finishing, present a summary that includes:
-- **Chosen architecture:** What approach was selected and why
-- **Rejected alternatives:** What was considered and why it was rejected
-- **Reasoning:** Key decisions and their justification
-- **Risks and unknowns:** What could go wrong or needs more investigation
-
-Note: After design summary approval, capture any user preferences that emerged during brainstorming before proceeding to write the design doc.
-
 ## After the Design
 
 **Documentation:**
-- Capture user preferences to `agents.md` in project root (get approval first)
 - Use elements-of-style:writing-clearly-and-concisely skill if available
 - Commit the design document to git
+
+**Spec Self-Review:**
+After writing the spec document, look at it with fresh eyes:
+
+1. **Placeholder scan:** Any "TBD", "TODO", incomplete sections, or vague requirements? Fix them.
+2. **Internal consistency:** Do any sections contradict each other? Does the architecture match the feature descriptions?
+3. **Scope check:** Is this focused enough for a single implementation plan, or does it need decomposition?
+4. **Ambiguity check:** Could any requirement be interpreted two different ways? If so, pick one and make it explicit.
+
+Fix any issues inline. No need to re-review — just fix and move on.
+
+**User Review Gate:**
+After the spec review loop passes, ask the user to review the written spec before proceeding:
+
+> "Spec written and committed to `<path>`. Please review it and let me know if you want to make any changes before we start writing out the implementation plan."
+
+Wait for the user's response. If they request changes, make them and re-run the spec review loop. Only proceed once the user approves.
 
 
 ## Key Principles
@@ -137,17 +144,3 @@ Note: After design summary approval, capture any user preferences that emerged d
 - **Explore alternatives** - Always propose 2-3 approaches before settling
 - **Incremental validation** - Present design, get approval before moving on
 - **Be flexible** - Go back and clarify when something doesn't make sense
-
-## Scope Shift Re-Approval
-
-If at any point the user asks you to work beyond the brainstorming scope (jump to implementation, skip steps, change direction significantly), you MUST say:
-
-> "Hey, by the way, you are asking me to do something that's different than how I'm supposed to brainstorm. Can you tell me how to best proceed here?"
-
-**No exceptions:**
-- User asks to "skip to coding" → ask this
-- User provides new requirements mid-flow → ask this
-- User asks to write tests now instead of design → ask this
-- Any deviation from brainstorming workflow → ask this
-
-**Purpose:** Keep the process clear and get explicit direction when scope shifts.

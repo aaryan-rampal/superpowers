@@ -3,3 +3,6 @@
 .claude/
 .DS_Store
 /docs/plans
+node_modules/
+inspo
+triage/
