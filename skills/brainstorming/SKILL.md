@@ -17,6 +17,16 @@ Do NOT invoke any implementation skill, write any code, scaffold any project, or
 
 Every project goes through this process. A todo list, a single-function utility, a config change — all of them. "Simple" projects are where unexamined assumptions cause the most wasted work. The design can be short (a few sentences for truly simple projects), but you MUST present it and get approval.
 
+## Relationship to Let Fate Decide
+
+`brainstorming` owns the front door for ambiguous creative work. If the user is loose, playful, or under-specified, stay in brainstorming first: explore context, ask clarifying questions, and shape the decision space.
+
+Do NOT invoke `let-fate-decide` as a substitute for this flow unless the user explicitly asks for Tarot/fate-based guidance.
+
+You MAY offer `let-fate-decide` as an escape hatch after some initial brainstorming when the user is still happily noncommittal and would rather let entropy break the tie than keep refining requirements.
+
+If the user wants that detour, give them the exact transfer prompt in a standalone code block with no prefacing or trailing filler so they can copy it verbatim into a new conversation, then resume the brainstorming session when they return with the reading.
+
 ## Checklist
 
 You MUST create a task for each of these items and complete them in order:
@@ -24,13 +34,14 @@ You MUST create a task for each of these items and complete them in order:
 1. **Explore project context** — check files, docs, recent commits
 2. **Offer visual companion** (if topic will involve visual questions) — this is its own message, not combined with a clarifying question. See the Visual Companion section below.
 3. **Ask clarifying questions** — one at a time, understand purpose/constraints/success criteria
-4. **Decision Interrogation** — explicitly probe architecture tradeoffs before selecting approach
-5. **Propose 2-3 approaches** — with trade-offs and your recommendation
-6. **Present design** — in sections scaled to their complexity, get user approval after each section
-7. **Write design doc** — save to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and commit
-8. **Spec self-review** — quick inline check for placeholders, contradictions, ambiguity, scope (see below)
-9. **User reviews written spec** — ask user to review the spec file before proceeding
-10. **Capture user preferences** — identify patterns, philosophies, coding preferences that emerged; get approval before writing to `agents.md`
+4. **Offer `let-fate-decide` only if appropriate** — optional, only after some brainstorming, and only if the user remains intentionally loose or explicitly wants Tarot guidance
+5. **Decision Interrogation** — explicitly probe architecture tradeoffs before selecting approach
+6. **Propose 2-3 approaches** — with trade-offs and your recommendation
+7. **Present design** — in sections scaled to their complexity, get user approval after each section
+8. **Write design doc** — save to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and commit
+9. **Spec self-review** — quick inline check for placeholders, contradictions, ambiguity, scope (see below)
+10. **User reviews written spec** — ask user to review the spec file before proceeding
+11. **Capture user preferences** — identify patterns, philosophies, coding preferences that emerged; get approval before writing to `agents.md`
 
 ## Process Flow
 
@@ -40,6 +51,8 @@ digraph brainstorming {
     "Visual questions ahead?" [shape=diamond];
     "Offer Visual Companion\n(own message, no other content)" [shape=box];
     "Ask clarifying questions" [shape=box];
+    "Still intentionally loose?" [shape=diamond];
+    "Offer let-fate-decide detour" [shape=box];
     "Decision Interrogation" [shape=box];
     "Propose 2-3 approaches" [shape=box];
     "User approves approach?" [shape=diamond];
@@ -49,8 +62,43 @@ digraph brainstorming {
     "Capture user preferences" [shape=box];
     "User approves AGENTS.md updates?" [shape=diamond];
 
+    "Ask clarifying questions" -> "Still intentionally loose?";
+    "Still intentionally loose?" -> "Offer let-fate-decide detour" [label="yes, optional"];
+    "Still intentionally loose?" -> "Decision Interrogation" [label="no"];
+    "Offer let-fate-decide detour" -> "Decision Interrogation" [label="declined / returned"];
 }
 ```
+
+## Let Fate Decide Detour
+
+Use this sparingly. The goal is not to avoid design work; it is to give a genuinely noncommittal user a structured way to break a tie and then bring the result back into brainstorming.
+
+Only offer this detour when ALL of the following are true:
+
+- You have already done some real brainstorming in the current conversation
+- The user is still relaxed about the choice rather than asking for precision
+- There are multiple reasonable directions and continued questioning is not buying much
+- The user has not said they want to avoid Tarot
+
+Suggested offer during brainstorming:
+> "You seem pretty loose on this. Want to let fate decide and come back with a reading?"
+
+If the user says yes, output ONLY this prompt, with the bracketed fields filled in for the current situation:
+
+```text
+Use the let-fate-decide skill for this decision.
+
+Context from brainstorming:
+- Project/task: <project or feature>
+- Decision to break: <the ambiguous choice>
+- Options on the table: <option A>; <option B>; <option C if needed>
+- Constraints: <hard constraints or 'none beyond normal good judgment'>
+- What I need back: a concise reading with the 4 cards, the interpretation, and a recommended direction I can bring back into the brainstorming session
+
+Do not implement anything. Do not continue brainstorming beyond the reading. I am taking the result back to the original brainstorming conversation.
+```
+
+When the user comes back with the reading, treat it as input to brainstorming, not as permission to skip the rest of the design flow.
 
 ## Decision Interrogation
 
@@ -97,6 +145,7 @@ After design approval but before writing the design doc, capture any preferences
 - Before asking detailed questions, assess scope: if the request describes multiple independent subsystems (e.g., "build a platform with chat, file storage, billing, and analytics"), flag this immediately. Don't spend questions refining details of a project that needs to be decomposed first.
 - If the project is too large for a single spec, help the user decompose into sub-projects: what are the independent pieces, how do they relate, what order should they be built? Then brainstorm the first sub-project through the normal design flow. Each sub-project gets its own spec → plan → implementation cycle.
 - For appropriately-scoped projects, ask questions one at a time to refine the idea
+- If the user is vague or casual, do not jump straight to `let-fate-decide`; brainstorming still owns the flow unless they explicitly want the Tarot detour
 - Prefer multiple choice questions when possible, but open-ended is fine too
 - Only one question per message - if a topic needs more exploration, break it into multiple questions
 - Focus on understanding: purpose, constraints, success criteria
