@@ -1,25 +1,6 @@
 ---
 name: find-docs
-description: >-
-  Retrieves authoritative, up-to-date technical documentation, API references,
-  configuration details, and code examples for any developer technology.
-
-  Use this skill whenever answering technical questions or writing code that
-  interacts with external technologies. This includes libraries, frameworks,
-  programming languages, SDKs, APIs, CLI tools, cloud services, infrastructure
-  tools, and developer platforms.
-
-  Common scenarios:
-  - looking up API endpoints, classes, functions, or method parameters
-  - checking configuration options or CLI commands
-  - answering "how do I" technical questions
-  - generating code that uses a specific library or service
-  - debugging issues related to frameworks, SDKs, or APIs
-  - retrieving setup instructions, examples, or migration guides
-  - verifying version-specific behavior or breaking changes
-
-  Prefer this skill whenever documentation accuracy matters or when model
-  knowledge may be outdated.
+description: Trigger this skill when you need precise, real-time technical documentation, API specifications, or code examples for any programming language, framework, or cloud service. Use it to ensure accuracy when answering "how-to" questions, debugging specific library versions, or checking configuration options where standard model knowledge might be outdated or hallucinated. Turn to this whenever a developer's request requires authoritative reference material rather than general programming advice.
 ---
 
 # Documentation Lookup
@@ -145,6 +126,7 @@ ctx7 login
 ## Error Handling
 
 If a command fails with a quota error ("Monthly quota reached" or "quota exceeded"):
+
 1. Inform the user their Context7 quota is exhausted
 2. Suggest they authenticate for higher limits: `ctx7 login`
 3. If they cannot or choose not to authenticate, answer from training knowledge and clearly note it may be outdated
