@@ -113,6 +113,39 @@ source .venv/bin/activate && uv pip install package_name
 
 **NEVER use system pip or python directly.**
 
+## Python Project Gates
+
+After the `.venv` check passes, read and enforce project-level Python
+configuration before functional work:
+
+- Read `pyproject.toml` (or equivalent config) and any repo-local `agents.md`/
+  `CLAUDE.md` conventions.
+- Confirm required sections for the project stack:
+  - `[project]` with a concrete `requires-python` policy.
+  - `[project.optional-dependencies]` for dev/test tooling.
+  - `[build-system]` with explicit backend.
+  - `[tool.ruff]` and `[tool.ruff.lint]`.
+  - `[tool.ty.environment]` and `[tool.ty.rules]` when `ty` is used.
+  - `[tool.pytest.ini_options]` for test defaults.
+- Use pinned dependency versions where the repository already enforces it.
+- Do not proceed with Python behavior changes while these gates are unknown.
+
+### Docstring gates for Python work
+
+- Apply Google-style docstrings for public Python modules, classes,
+  functions, and methods unless repo-local guidance says otherwise.
+- For docstring-only asks, verify exact file contents after changes.
+
+### Verification order
+
+Run checks in this order after edits:
+1. `.venv/bin/python -m ruff check ...`
+2. `.venv/bin/python -m ruff format --check ...`
+3. `.venv/bin/python -m ty check`
+4. `.venv/bin/python -m pytest -q`
+
+If a required tool is missing, report the gap and do not treat the check as passed.
+
 ## Red Flags - STOP and Ask Immediately
 
 **These thoughts mean you're violating the rule - STOP:**
