@@ -22,11 +22,21 @@ Extract from the data:
 - **Speed trends**: Duration column where available. Anything taking much longer than rating suggests?
 - **Execution vs. concept failures**: read his notes carefully. Separate conceptual + coding failures.
 - **Difficulty ceiling**: what's the highest-rated problem he solved cleanly? With struggle? Failed?
-- **Recency**: what has he done in the last 7–10 days vs. earlier? Use the `date` command to ground your output.
+- **Current status**: latest logged problem date, days since last logged problem, and whether
+  the current cadence matches the timeline in `@Goals.md`. Use the `date` command to ground
+  this in today's actual date.
+- **Recency**: what has he done in the last 7–10 days vs. earlier? Explicitly mention if
+  there are no logged problems in that window.
 
 ## Step 3 — Output
 
 Give him exactly this, in this order:
+
+### Current status
+
+1–2 bullet points. Include the latest logged problem date and the number of days since then.
+If there are no logged problems in the last 7–10 days, say that plainly. Tie cadence to the
+goals timeline only when the log supports it.
 
 ### What the data says
 
@@ -56,3 +66,5 @@ Based on his notes, name one specific recurring mistake. One sentence.
 - Do NOT give encouragement or filler ("great progress", "you're doing well").
 - If Duration is missing for most problems, note it once and move on — don't repeat it.
 - Be direct and specific. A problem recommendation without a link is useless.
+- Do NOT bury inactivity inside a general analysis bullet. If the latest logged problem is
+  stale, it belongs in `Current status`.
