@@ -7,7 +7,7 @@ description: Use when the user says "global todo", "add to global todo", "add th
 
 ## Overview
 
-Manages a persistent todo list at `~/obsidian/Todo.md`. Each item includes brief context so the user knows where it came from when reviewing later.
+Manages a persistent kanban board at `~/obsidian/Kanban.md`. Each item is added to the **Backlog** column with a short label only.
 
 ## When to Use
 
@@ -16,28 +16,65 @@ Manages a persistent todo list at `~/obsidian/Todo.md`. Each item includes brief
 
 ## Steps
 
-1. **Read** `~/obsidian/Todo.md` to see current contents
-2. **Append** new item(s) with context note:
-   ```
-   - [ ] task description (context: brief note — e.g. "from onboarding project", "from ACIS dashboard work")
-   ```
-3. **Write** the updated file
-4. **Commit** the todo file:
+1. **Read** `~/obsidian/Kanban.md` to see current contents and find the `## Backlog` section
+2. **Append** new item(s) under `## Backlog` using the format below
+3. **Create a linked note** at `~/obsidian/kanban-notes/<Task name>.md` with full context (what, why, blockers, links, commands)
+4. **Write** the updated Kanban file
+5. **Commit** both files:
    ```bash
-   cd ~/obsidian && git add Todo.md && git commit -m "chore: add todo item"
+   cd ~/obsidian && git add Kanban.md kanban-notes/ && git commit -m "chore: add todo item"
    ```
 
-## Format
+## Card Format (in Kanban.md)
 
 ```markdown
-- [ ] Do the thing (context: what project/conversation this came from)
+- [ ] [[Short task name]]
 ```
 
-Context should be 3-8 words — just enough to jog memory. Don't write a sentence.
+Optionally add a blocker emoji or date:
+```markdown
+- [ ] [[Short task name]] ⛔
+- [ ] [[Short task name]] 📅 2026-07-15
+```
+
+### Rules for card text
+
+- **MAX ~8 words** on the card line. No sentences.
+- **NO `(context: ...)` inline.** All context goes in the linked note.
+- The card title should be scannable at a glance on a kanban board.
+- Use `⛔` to mark blocked items visually.
+
+## Linked Note Format (in kanban-notes/)
+
+```markdown
+# Task Name
+
+Brief description of what this is and why it matters.
+
+## Current State
+
+What's the status right now? Blockers, last attempt, etc.
+
+## What to Do
+
+Steps or commands to complete this.
+
+## Relationships
+
+### Blocked by
+- ...
+
+### Blocks
+- ...
+```
+
+Not every section is required. Use what's relevant.
 
 ## Rules
 
 - Always read the file first before writing
-- Always commit after every change — never leave Todo.md in a dirty state
-- Add context even if the user didn't ask for it; they'll thank you later
+- Always commit after every change
+- Card text MUST be short (title only). Details go in the linked note.
 - If the user gives multiple items, add them all in one write + one commit
+- Do NOT write to Todo.md (deprecated)
+- Do NOT put walls of text in Kanban.md cards
