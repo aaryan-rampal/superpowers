@@ -57,6 +57,10 @@ When the user says *"I added comments"* / *"reply to all"* / *"did you reply to 
 - **New comments** (creating an anchor from a prose quote) are **not yet** a `tc` verb —
   do those by hand per the schema below, or ask. The anchor-matching logic is the v2 work.
 - Comment text may contain Markdown; the CLI handles JSON escaping.
+- **Round-tripping to Chorus:** to publish the note's prose to a Chorus doc and sync these
+  comments with Chorus (chorus.aws.dev), use the `chorus-obsidian-integration` skill. It
+  reads this block but never uploads it, and stamps mirrored comments with `chorus_num` /
+  `origin` keys (which the verbs here safely ignore).
 
 ## Schema (for the hand-edited cases above)
 
