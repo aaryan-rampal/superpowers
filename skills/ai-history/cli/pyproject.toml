@@ -1,0 +1,22 @@
+[project]
+name = "ai-history-cli"
+version = "0.1.0"
+description = "Helper CLI for the ai-history skill: unified disk search over Claude Code, MeshClaw, and Kiro chat history"
+requires-python = "==3.13.*"
+
+[project.optional-dependencies]
+dev = ["pytest==9.1.1"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
