@@ -5,6 +5,8 @@ description: Use when working with Python code, running Python commands, install
 
 # Managing Python Environments
 
+**WARNING**: Unless user has explicitly allowed you to, this is likely the WRONG skill and workflow to use for Amazon-related work.
+
 ## Overview
 
 **This is a HARD STOP rule. No exceptions. No rationalizations.**
