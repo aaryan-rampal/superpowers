@@ -9,7 +9,7 @@ Unified disk-based search over past AI chats across **Claude Code, MeshClaw, and
 
 ## Commands
 
-The launcher is `cli/ai-history` (runs from anywhere, no install):
+The launcher is `cli/ai-history` (runs from anywhere, no install). If it fails with something like `.venv/bin/python: No such file`, the environment isn't set up — read `cli/AGENTS.md` and follow the bootstrap there (one command), then retry.
 
 ```bash
 cli/ai-history search "QUERY"                 # keyword search across all three stores
