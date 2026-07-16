@@ -131,6 +131,10 @@ configuration before functional work:
   - `[tool.pytest.ini_options]` for test defaults.
 - Use pinned dependency versions where the repository already enforces it.
 - Do not proceed with Python behavior changes while these gates are unknown.
+- FastAPI: pick `def` vs `async def` per endpoint by whether it does async I/O;
+  never call blocking I/O from an `async def` handler.
+- FastAPI: manage long-lived resources (DB/HTTP clients) in `lifespan` and
+  inject via `Depends`; use `with`/`async with` for per-request resources.
 
 ### Docstring gates for Python work
 
@@ -147,6 +151,43 @@ Run checks in this order after edits:
 4. `.venv/bin/python -m pytest -q`
 
 If a required tool is missing, report the gap and do not treat the check as passed.
+
+## Modern toolchain (uv / ruff / ty / pytest)
+
+Applies to **non-Brazil / personal Python projects**. On Amazon/Brazil packages
+the toolchain is Brazil-managed (`brazil-build`, `brazil-path`); `uv add` /
+`uv sync` do not apply there — respect the Amazon warning at the top of this
+file.
+
+**Anti-patterns → what to do instead:**
+
+| Avoid | Use Instead |
+|-------|-------------|
+| `uv pip install <pkg>` | `uv add <pkg>` (or `uv sync` for existing lock) |
+| Editing `pyproject.toml` by hand to add deps | `uv add <pkg>` / `uv remove <pkg>` |
+| Poetry / pipenv | uv |
+| mypy / pyright | ty (from Astral) |
+| `[project.optional-dependencies]` for dev tools | `[dependency-groups]` (PEP 735) |
+| Manual `source .venv/bin/activate` | `uv run <cmd>` |
+| `requirements.txt` | PEP 723 for scripts, `pyproject.toml` for projects |
+
+**uv command quick-reference:**
+
+| Command | Purpose |
+|---------|---------|
+| `uv add <pkg>` | Add a project dependency |
+| `uv add --group dev <pkg>` | Add to a dependency group (dev/test/docs) |
+| `uv remove <pkg>` | Remove a dependency |
+| `uv sync --all-groups` | Install all groups from the lock |
+| `uv run <cmd>` | Run a command inside the project env |
+| `uv run --with <pkg> <cmd>` | Run with a one-off, non-project dependency |
+
+**PEP 723 inline metadata**: for single-file scripts with deps, put the
+requirements in a `# /// script` block at the top of the file and run with
+`uv run script.py` — no project, no venv juggling.
+
+**`ty` gotcha**: python-version lives under `[tool.ty.environment]`, NOT
+`[tool.ty]`. Getting this wrong silently uses the wrong interpreter version.
 
 ## Red Flags - STOP and Ask Immediately
 
