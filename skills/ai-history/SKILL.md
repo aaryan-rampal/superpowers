@@ -34,7 +34,9 @@ Each line is: `TIMESTAMP  TOOL  ID-PREFIX  TITLE`, with a match snippet indented
 
 - Search is **keyword-based** (ripgrep), not semantic. Use specific terms.
 - Titles are best-effort per store: Claude uses its `ai-title`, MeshClaw its metadata title, Kiro falls back to the first prompt (its stored titles are often boilerplate).
-- Output can be large — use `-n` or `--json | jq`. **Run in a subagent** to keep raw history out of the main context. Use Sonnet with a 1M context window for the subagent model. 
+- Output can be large — use `-n` or `--json | jq`. **Run in a subagent** to keep raw history out of the main context. Use `global.anthropic.claude-sonnet-4-6[1m]`
+for the subagent model. 
+
 - The stores read: `~/.claude/projects/`, `~/.meshclaw/sessions/`, `~/.kiro/sessions/cli/`. A store that's absent on the machine is silently skipped.
 
 ## Maintenance — when a store changes format
