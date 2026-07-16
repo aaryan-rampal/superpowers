@@ -132,9 +132,12 @@ configuration before functional work:
 - Use pinned dependency versions where the repository already enforces it.
 - Do not proceed with Python behavior changes while these gates are unknown.
 - FastAPI: pick `def` vs `async def` per endpoint by whether it does async I/O;
-  never call blocking I/O from an `async def` handler.
+  never call blocking I/O from an `async def` handler. If you must call sync
+  I/O, use `run_in_executor` / a threadpool, or make the endpoint plain `def`.
 - FastAPI: manage long-lived resources (DB/HTTP clients) in `lifespan` and
   inject via `Depends`; use `with`/`async with` for per-request resources.
+- FastAPI: for per-request resources, prefer `Depends` with a `yield`
+  generator — cleanup runs after the response is sent.
 
 ### Docstring gates for Python work
 
@@ -188,6 +191,46 @@ requirements in a `# /// script` block at the top of the file and run with
 
 **`ty` gotcha**: python-version lives under `[tool.ty.environment]`, NOT
 `[tool.ty]`. Getting this wrong silently uses the wrong interpreter version.
+
+**Recommended `ruff` config** (Trail of Bits posture — `select=["ALL"]` then
+narrow ignores; `COM812` + `ISC001` MUST be ignored, they conflict with the
+formatter):
+
+```toml
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src"]
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = ["D", "COM812", "ISC001"]  # D=docstrings (enable selectively)
+
+[tool.ruff.format]
+quote-style = "double"
+docstring-code-format = true
+```
+
+**Recommended `pytest` + coverage config** (fail-loud defaults, branch
+coverage, warnings-as-errors):
+
+```toml
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = [
+  "-ra", "--strict-markers", "--strict-config",
+  "--cov=<pkg>", "--cov-report=term-missing", "--cov-fail-under=80",
+]
+filterwarnings = ["error"]
+
+[tool.coverage.run]
+branch = true
+```
+
+Test deps: `uv add --group test pytest pytest-cov hypothesis`. **hypothesis**
+is part of the recommended stack for property-based tests — use it for pure
+functions, parsers, serializers, and invariant checks.
 
 ## Red Flags - STOP and Ask Immediately
 

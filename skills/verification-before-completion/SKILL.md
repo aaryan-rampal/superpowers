@@ -129,11 +129,12 @@ met" row above.
 | Status | Meaning | Action |
 |--------|---------|--------|
 | `full_match` | Code implements the spec item exactly | Accept |
-| `partial_match` | Some but not all of the spec item is implemented | Treat as a gap; investigate until `full_match` or `mismatch` |
+| `partial_match` | Some but not all of the spec item is implemented | Treat as a gap; drive to `full_match` or `mismatch` |
 | `mismatch` | Code contradicts the spec | Fix code or amend spec — decide explicitly |
 | `missing_in_code` | Spec requires it, code doesn't have it | Implement or accept deviation with justification |
-| `undocumented_code_path` | Code does something the spec doesn't cover | Document in spec or remove |
-| `code_stronger` / `code_weaker` | Code enforces more/less than the spec | Reconcile which side is authoritative |
+| `undocumented_code_path` | Spec silent, code does it anyway | Document in spec or remove |
+| `code_stronger_than_spec` | Code enforces more than the spec requires | Reconcile — is the extra enforcement authoritative? |
+| `code_weaker_than_spec` | Code enforces less than the spec requires | Treat as a gap — usually a bug |
 | `ambiguous` | Spec text is unclear | Resolve with spec owner before claiming compliance |
 
 **Anti-hallucination rules:**
@@ -142,7 +143,10 @@ met" row above.
   place of quotes.
 - Zero speculation. "Probably matches" is not a status.
 - An "obvious match" still needs a documented evidence row.
-- A `partial_match` is a gap, not a pass — never round it up.
+- A `partial_match` is a gap, not a pass — **never a resting state**; drive it
+  to `full_match` or `mismatch` before signing off.
+- Attach a confidence score to every mapping. Anything below ~0.8 is not a
+  finding — investigate until it clears the bar, or classify it `ambiguous`.
 
 This is the "generate one artifact, verify against another" discipline — the
 spec is the source, drift is a yes/no output, not a vibe check.
