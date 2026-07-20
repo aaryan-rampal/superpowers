@@ -5,7 +5,21 @@ argument-hint: "What will the next session be used for?"
 disable-model-invocation: true
 ---
 
-Write a handoff document summarising the current conversation so a fresh agent can continue the work. Save to the temporary directory of the user's OS - not the current workspace.
+Write a handoff document summarising the current conversation so a fresh agent can continue the work.
+
+## Where to save
+
+Save to a global, per-project handoff directory — keyed by the current working directory the same way Claude Code keys its project dirs (full path, `/` → `-`). This survives reboots (unlike `$TMPDIR`) and never collides across projects:
+
+```bash
+DIR="$HOME/.handoffs/$(pwd | sed 's#/#-#g')"
+mkdir -p "$DIR"
+FILE="$DIR/$(date +%Y-%m-%d-%H%M%S)-<slug>.md"
+```
+
+`<slug>` is a short kebab-case description of the work (e.g. `refactor-auth`). Write the doc to `$FILE` and tell the user the full path.
+
+## What to include
 
 Include a "suggested skills" section in the document, which suggests skills that the agent should invoke.
 
