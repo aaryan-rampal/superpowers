@@ -21,15 +21,34 @@ def main(argv: list[str] | None = None) -> int:
         sp = sub.add_parser(name)
         if name == "search":
             sp.add_argument("query")
+            sp.add_argument(
+                "--semantic",
+                action="store_true",
+                help="rank by meaning via a local embedding index (needs the [semantic] extra + `index`)",
+            )
         sp.add_argument("--tool", choices=TOOLS, default="all")
         sp.add_argument("-n", "--limit", type=int, default=20)
         sp.add_argument("--json", action="store_true", dest="as_json")
 
+    ip = sub.add_parser("index", help="build/refresh the local semantic index (incremental)")
+    ip.add_argument("--tool", choices=TOOLS, default="all")
+
     args = parser.parse_args(argv)
     tools = None if args.tool == "all" else [args.tool]
 
+    if args.cmd == "index":
+        from ai_history import semantic
+
+        sessions_n, chunks_n = semantic.build_index(tools=tools)
+        print(f"Indexed {sessions_n} sessions ({chunks_n} chunks) → {semantic.CACHE_DIR}")
+        return 0
+
     if args.cmd == "list":
         sessions = core.list_sessions(tools=tools)
+    elif args.cmd == "search" and args.semantic:
+        from ai_history import semantic
+
+        sessions = semantic.search(args.query, tools=tools)
     else:
         sessions = core.search(args.query, tools=tools)
 

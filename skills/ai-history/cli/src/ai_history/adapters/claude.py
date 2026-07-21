@@ -68,6 +68,28 @@ def load_session(path: Path) -> Session | None:
     )
 
 
+def iter_texts(path: Path) -> Iterator[str]:
+    """Yield full text of each user/assistant turn (for embedding, no truncation)."""
+    try:
+        lines = path.read_text().splitlines()
+    except (OSError, PermissionError):
+        return
+    for line in lines:
+        obj = _json(line)
+        if obj is None or obj.get("type") not in ("user", "assistant"):
+            continue
+        content = obj.get("message", {}).get("content")
+        if isinstance(content, str):
+            if content.strip():
+                yield content.strip()
+        elif isinstance(content, list):
+            for block in content:
+                if isinstance(block, dict) and block.get("type") == "text":
+                    text = str(block.get("text", "")).strip()
+                    if text:
+                        yield text
+
+
 def _json(line: str) -> dict | None:
     try:
         obj = json.loads(line)

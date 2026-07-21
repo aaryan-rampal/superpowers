@@ -68,6 +68,26 @@ def _is_usable_title(title: str) -> bool:
     return bool(title) and not title.startswith("[")
 
 
+def iter_texts(path: Path) -> Iterator[str]:
+    """Yield full text of each Prompt/AssistantMessage turn (for embedding, no truncation)."""
+    try:
+        lines = path.read_text().splitlines()
+    except (OSError, PermissionError):
+        return
+    for line in lines:
+        try:
+            obj = json.loads(line)
+        except (json.JSONDecodeError, ValueError):
+            continue
+        if not isinstance(obj, dict) or obj.get("kind") not in ("Prompt", "AssistantMessage"):
+            continue
+        for item in obj.get("data", {}).get("content", []):
+            if isinstance(item, dict) and item.get("kind") == "text":
+                text = str(item.get("data", "")).strip()
+                if text:
+                    yield text
+
+
 def _first_prompt_text(lines: list[str]) -> str:
     for line in lines:
         try:
