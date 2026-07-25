@@ -105,8 +105,8 @@ Then use it for ALL Python operations:
 # Always use the venv Python
 .venv/bin/python script.py
 
-# Use uv WITHIN the venv
-.venv/bin/python -m uv pip install package_name
+# Use uv (standalone binary) targeting the venv
+uv pip install --python .venv/bin/python package_name
 # OR activate and use:
 source .venv/bin/activate && uv pip install package_name
 ```
@@ -213,7 +213,7 @@ pip install numpy
 pip install --break-system-packages requests
 
 # Assuming base is fine
-ln -s ~/env/base .venv && .venv/bin/python -m uv pip install flask
+ln -s ~/env/base .venv && uv pip install --python .venv/bin/python flask
 
 # Creating directories without asking
 mkdir -p /tmp/new-project && cd /tmp/new-project && uv venv .venv
@@ -235,7 +235,7 @@ ls -la .venv 2>&1 || echo "No .venv found"
 ln -s ~/env/ml-project .venv
 
 # Step 4: Use the environment for everything
-.venv/bin/python -m uv pip install numpy pandas
+uv pip install --python .venv/bin/python numpy pandas
 .venv/bin/python script.py
 ```
 
@@ -247,7 +247,7 @@ Before ANY Python operation:
 - [ ] If NO .venv → STOP and ask user
 - [ ] If YES .venv → Verify: `ls .venv/bin/python 2>&1`
 - [ ] Use `.venv/bin/python` for all Python execution
-- [ ] Use `.venv/bin/python -m uv pip` for package management
+- [ ] Use `uv pip install --python .venv/bin/python` for package management
 - [ ] NEVER use system python/pip
 - [ ] NEVER use --break-system-packages flag
 - [ ] NEVER assume which environment to use

@@ -48,7 +48,10 @@ goals timeline only when the log supports it.
 
 - Problem name + CF/LC link
 - Rating/difficulty
-- Why this problem specifically (one sentence, tied to a gap you found)
+- Why this problem specifically
+  - one sentence
+  - tied to a gap you found
+    - without giving away any hints for how to approach the problem, use Tolkien-esque, fantasy playful language to describe
 
 Prioritize topics that are useful to him for his goals.
 

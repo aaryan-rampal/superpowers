@@ -1,0 +1,23 @@
+{
+  "nodes": [
+    {"id": "estimators", "concept": "Bias, variance, MSE of an estimator",
+     "weight": "high", "delta": "refresher", "threshold": false,
+     "provenance": ["https://en.wikipedia.org/wiki/Bias_of_an_estimator", "artifact:cell_47"]},
+    {"id": "montecarlo", "concept": "Monte Carlo estimation & the bootstrap",
+     "weight": "high", "delta": "refresher", "threshold": false,
+     "provenance": ["https://en.wikipedia.org/wiki/Monte_Carlo_method"]},
+    {"id": "cvar", "concept": "VaR, CVaR and its finite-sample bias",
+     "weight": "core", "delta": "new-ish", "threshold": true,
+     "provenance": ["https://sites.math.washington.edu/~rtr/papers/rtr187-CVaR2.pdf", "artifact:cell_47"]},
+    {"id": "reinforce", "concept": "REINFORCE / policy gradient",
+     "weight": "core", "delta": "biggest-gap", "threshold": true,
+     "provenance": ["https://spinningup.openai.com/en/latest/spinningup/rl_intro3.html"]}
+  ],
+  "edges": [
+    {"prereq": "estimators", "concept": "cvar", "provenance": ["artifact:cell_47"]},
+    {"prereq": "montecarlo", "concept": "cvar", "provenance": ["https://en.wikipedia.org/wiki/Monte_Carlo_method"]},
+    {"prereq": "estimators", "concept": "reinforce", "provenance": ["https://spinningup.openai.com/en/latest/spinningup/rl_intro3.html"]},
+    {"prereq": "montecarlo", "concept": "reinforce", "provenance": ["https://spinningup.openai.com/en/latest/spinningup/rl_intro3.html"]},
+    {"prereq": "cvar", "concept": "reinforce", "provenance": ["artifact:cell_36"]}
+  ]
+}

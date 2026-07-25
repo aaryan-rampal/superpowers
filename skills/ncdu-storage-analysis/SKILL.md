@@ -115,3 +115,40 @@ Generated code:
 ```
 
 Always include exact paths for cleanup candidates.
+
+## Temporal Sweep
+
+Use when the ncdu snapshot is stale or you need "large + untouched" signal. Scans files >50MB and sorts oldest-modified first.
+
+**Scan time on this machine:** ~32 sec (244 files found, SSD).
+
+```bash
+find ~ -size +50M -not -path '*/.Trash/*' \
+  -exec stat -f "%z %m %N" {} \; 2>/dev/null \
+  | sort -k2n | head -100
+# columns: size_bytes, mtime_epoch, path — oldest-modified first
+```
+
+To convert epoch to a readable date for any row: `date -r <mtime_epoch>`.
+
+Files untouched for 6+ months that aren't app state (databases, mail spools, Xcode simulators) are strong archive or delete candidates.
+
+## Duplicate Detection
+
+Use `rmlint` to find byte-identical files. Outputs a shell script you can inspect before running.
+
+**Scan time on this machine:** ~8 min (full home directory, SSD). Found 17.6 GB of duplicates across 234k files in 75k groups on first run.
+
+```bash
+rmlint ~ --types=duplicates -o summary -o json:rmlint.json
+```
+
+Review the generated `rmlint.sh` before running it:
+
+```bash
+head -60 rmlint.sh          # see what it will delete
+sh rmlint.sh -d -n          # dry run — prints actions without executing
+sh rmlint.sh -d             # execute (moves dupes to Trash, keeps one copy)
+```
+
+Common high-yield duplicate sources: downloaded installers, exported videos, node_modules assets across projects.
