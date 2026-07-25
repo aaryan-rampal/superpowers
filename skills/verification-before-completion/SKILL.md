@@ -48,6 +48,7 @@ Skip any step = lying, not verifying
 | Regression test works | Red-green cycle verified | Test passes once |
 | Agent completed | VCS diff shows changes | Agent reports "success" |
 | Requirements met | Line-by-line checklist | Tests passing |
+| Matches the spec | Every spec item mapped to code w/ file:line + classified | "Looks like it implements the design" |
 
 ## Red Flags - STOP
 
@@ -104,6 +105,51 @@ Skip any step = lying, not verifying
 ✅ Agent reports success → Check VCS diff → Verify changes → Report actual state
 ❌ Trust agent report
 ```
+
+## Spec-compliance verification (when a written spec exists)
+
+**When to use**: you have BOTH a written spec / design doc AND code that's
+supposed to implement it, and you're about to claim "matches the spec" /
+"implemented per the design." This is the deepened form of the "Requirements
+met" row above.
+
+**Core loop:**
+
+1. **EXTRACT** each concrete claim, invariant, or required behavior from the
+   spec — quote the exact spec text and cite the section.
+2. **MAP** each item to code with exact `file:line` evidence. No hand-waving.
+3. **CLASSIFY** each mapping (see table below).
+4. **DO NOT INFER** unspecified behavior. Spec silent → `undocumented`. Spec
+   unclear → `ambiguous`. Guessing is hallucination.
+5. **EARN THE CLAIM.** "Matches the spec" is only valid when every spec item
+   is `full_match` or a deliberately-accepted deviation, with evidence.
+
+**Classification table:**
+
+| Status | Meaning | Action |
+|--------|---------|--------|
+| `full_match` | Code implements the spec item exactly | Accept |
+| `partial_match` | Some but not all of the spec item is implemented | Treat as a gap; drive to `full_match` or `mismatch` |
+| `mismatch` | Code contradicts the spec | Fix code or amend spec — decide explicitly |
+| `missing_in_code` | Spec requires it, code doesn't have it | Implement or accept deviation with justification |
+| `undocumented_code_path` | Spec silent, code does it anyway | Document in spec or remove |
+| `code_stronger_than_spec` | Code enforces more than the spec requires | Reconcile — is the extra enforcement authoritative? |
+| `code_weaker_than_spec` | Code enforces less than the spec requires | Treat as a gap — usually a bug |
+| `ambiguous` | Spec text is unclear | Resolve with spec owner before claiming compliance |
+
+**Anti-hallucination rules:**
+
+- Cite exact spec text (or code `file:line`) for every claim — no summaries in
+  place of quotes.
+- Zero speculation. "Probably matches" is not a status.
+- An "obvious match" still needs a documented evidence row.
+- A `partial_match` is a gap, not a pass — **never a resting state**; drive it
+  to `full_match` or `mismatch` before signing off.
+- Attach a confidence score to every mapping. Anything below ~0.8 is not a
+  finding — investigate until it clears the bar, or classify it `ambiguous`.
+
+This is the "generate one artifact, verify against another" discipline — the
+spec is the source, drift is a yes/no output, not a vibe check.
 
 ## Why This Matters
 

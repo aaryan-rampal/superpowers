@@ -28,6 +28,12 @@ Write the test first. Watch it fail. Write minimal code to pass.
 
 Thinking "skip TDD just this once"? Stop. That's rationalization.
 
+**Pairs with property-based testing.** TDD's red-green decides *which examples* to
+write; for code with serialization pairs, parsers, normalizers, validators, or pure
+functions, a *property* (roundtrip, idempotence, invariant) covers a whole class of
+inputs one example can't. Use the failing property test as your RED step. See the
+`property-based-testing` skill for the property catalog and per-language libraries.
+
 ## The Iron Law
 
 ```

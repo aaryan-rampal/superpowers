@@ -5,6 +5,8 @@ description: Use when working with Python code, running Python commands, install
 
 # Managing Python Environments
 
+**WARNING**: Unless user has explicitly allowed you to, this is likely the WRONG skill and workflow to use for Amazon-related work.
+
 ## Overview
 
 **This is a HARD STOP rule. No exceptions. No rationalizations.**
@@ -129,6 +131,13 @@ configuration before functional work:
   - `[tool.pytest.ini_options]` for test defaults.
 - Use pinned dependency versions where the repository already enforces it.
 - Do not proceed with Python behavior changes while these gates are unknown.
+- FastAPI: pick `def` vs `async def` per endpoint by whether it does async I/O;
+  never call blocking I/O from an `async def` handler. If you must call sync
+  I/O, use `run_in_executor` / a threadpool, or make the endpoint plain `def`.
+- FastAPI: manage long-lived resources (DB/HTTP clients) in `lifespan` and
+  inject via `Depends`; use `with`/`async with` for per-request resources.
+- FastAPI: for per-request resources, prefer `Depends` with a `yield`
+  generator — cleanup runs after the response is sent.
 
 ### Docstring gates for Python work
 
@@ -145,6 +154,83 @@ Run checks in this order after edits:
 4. `.venv/bin/python -m pytest -q`
 
 If a required tool is missing, report the gap and do not treat the check as passed.
+
+## Modern toolchain (uv / ruff / ty / pytest)
+
+Applies to **non-Brazil / personal Python projects**. On Amazon/Brazil packages
+the toolchain is Brazil-managed (`brazil-build`, `brazil-path`); `uv add` /
+`uv sync` do not apply there — respect the Amazon warning at the top of this
+file.
+
+**Anti-patterns → what to do instead:**
+
+| Avoid | Use Instead |
+|-------|-------------|
+| `uv pip install <pkg>` | `uv add <pkg>` (or `uv sync` for existing lock) |
+| Editing `pyproject.toml` by hand to add deps | `uv add <pkg>` / `uv remove <pkg>` |
+| Poetry / pipenv | uv |
+| mypy / pyright | ty (from Astral) |
+| `[project.optional-dependencies]` for dev tools | `[dependency-groups]` (PEP 735) |
+| Manual `source .venv/bin/activate` | `uv run <cmd>` |
+| `requirements.txt` | PEP 723 for scripts, `pyproject.toml` for projects |
+
+**uv command quick-reference:**
+
+| Command | Purpose |
+|---------|---------|
+| `uv add <pkg>` | Add a project dependency |
+| `uv add --group dev <pkg>` | Add to a dependency group (dev/test/docs) |
+| `uv remove <pkg>` | Remove a dependency |
+| `uv sync --all-groups` | Install all groups from the lock |
+| `uv run <cmd>` | Run a command inside the project env |
+| `uv run --with <pkg> <cmd>` | Run with a one-off, non-project dependency |
+
+**PEP 723 inline metadata**: for single-file scripts with deps, put the
+requirements in a `# /// script` block at the top of the file and run with
+`uv run script.py` — no project, no venv juggling.
+
+**`ty` gotcha**: python-version lives under `[tool.ty.environment]`, NOT
+`[tool.ty]`. Getting this wrong silently uses the wrong interpreter version.
+
+**Recommended `ruff` config** (Trail of Bits posture — `select=["ALL"]` then
+narrow ignores; `COM812` + `ISC001` MUST be ignored, they conflict with the
+formatter):
+
+```toml
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src"]
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = ["D", "COM812", "ISC001"]  # D=docstrings (enable selectively)
+
+[tool.ruff.format]
+quote-style = "double"
+docstring-code-format = true
+```
+
+**Recommended `pytest` + coverage config** (fail-loud defaults, branch
+coverage, warnings-as-errors):
+
+```toml
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = [
+  "-ra", "--strict-markers", "--strict-config",
+  "--cov=<pkg>", "--cov-report=term-missing", "--cov-fail-under=80",
+]
+filterwarnings = ["error"]
+
+[tool.coverage.run]
+branch = true
+```
+
+Test deps: `uv add --group test pytest pytest-cov hypothesis`. **hypothesis**
+is part of the recommended stack for property-based tests — use it for pure
+functions, parsers, serializers, and invariant checks.
 
 ## Red Flags - STOP and Ask Immediately
 
