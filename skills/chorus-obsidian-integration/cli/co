@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-# Launcher for the chorus-obsidian helper CLI. Runs from anywhere; no install needed.
-set -euo pipefail
-HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-exec "$HERE/.venv/bin/python" -c "import sys; sys.path.insert(0, '$HERE/src'); from chorus_obsidian.cli import _entry; _entry()" "$@"
